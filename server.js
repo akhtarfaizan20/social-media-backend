@@ -1,6 +1,7 @@
 // imports
 const express = require("express");
 const cors = require("cors");
+const { connectDB } = require("./Config/db");
 require("dotenv").config();
 
 // initiating the express app
@@ -16,8 +17,9 @@ app.get("/", (req, res) => {
   res.send(`<h1>Welcome to the social media app</h1>`);
 });
 
-app.listen(process.env.PORT || 8080, () => {
+app.listen(process.env.PORT || 8080, async () => {
   try {
+    await connectDB;
     console.log("Server is live at: http://localhost:8080");
   } catch (error) {
     console.log(error);
