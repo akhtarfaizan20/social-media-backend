@@ -154,8 +154,16 @@ const unfollow = async (req, res) => {
   }
 };
 
+const getUser = (req, res) => {
+  // getting data set by the authenticator middleware
+  const { user } = req.body;
+
+  res.send(user);
+};
+
 module.exports = {
   authenticate,
   follow,
   unfollow,
+  getUser,
 };
