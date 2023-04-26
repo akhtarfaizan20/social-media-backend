@@ -1,3 +1,4 @@
+const { CommentModel } = require("../Model/Comments.model");
 const { PostModel } = require("../Model/Posts.model");
 
 const addPost = async (req, res) => {
@@ -97,9 +98,42 @@ const unlikePost = async (req, res) => {
   }
 };
 
+const commentPost = async (req, res) => {
+  const { id } = req.params;
+
+  const { user, text } = req.body;
+
+  try {
+    // Check if post exists
+    const post = await PostModel.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    // create the comment using comment model
+    const comment = new CommentModel({
+      text,
+      createdBy: user._id,
+      post: post._id,
+    });
+
+    await comment.save();
+
+    // build relationships with post
+    post.comments.push(comment._id);
+    post.save();
+
+    res.send({ commentID: comment._id });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: error });
+  }
+};
+
 module.exports = {
   addPost,
   deletePost,
   likePost,
   unlikePost,
+  commentPost,
 };

@@ -11,6 +11,7 @@ const {
   deletePost,
   likePost,
   unlikePost,
+  commentPost,
 } = require("../Controller/Post.controller");
 
 const router = express.Router();
@@ -38,6 +39,9 @@ router.post("/like/:id", authenticator, likePost);
 
 // POST /api/unlike/{id}
 router.post("/unlike/:id", authenticator, unlikePost);
+
+// POST /api/comment/{id}
+router.post("/comment/:id", authenticator, commentPost);
 
 module.exports = {
   router,
