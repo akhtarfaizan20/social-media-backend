@@ -130,10 +130,64 @@ const commentPost = async (req, res) => {
   }
 };
 
+const getSinglePost = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the post by ID
+    const post = await PostModel.findById(id)
+      .populate("createdBy", [])
+      .populate({
+        path: "likes",
+      })
+      .populate({
+        path: "comments",
+      });
+
+    // If post is not found, return 404 error
+    if (!post) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    // Return the post
+    res.json(post);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: error });
+  }
+};
+
+const getAllPost = async (req, res) => {
+  const { _id } = req.body.user;
+  console.log({ _id });
+
+  try {
+    let posts = await PostModel.find({ createdBy: _id.toString() })
+      .sort({
+        created_at: "asc",
+      })
+      .populate("createdBy")
+      .populate({
+        path: "likes",
+      })
+      .populate({
+        path: "comments",
+      });
+
+    // Return the post
+    res.json(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ message: error });
+  }
+};
+
 module.exports = {
   addPost,
   deletePost,
   likePost,
   unlikePost,
   commentPost,
+  getSinglePost,
+  getAllPost,
 };
