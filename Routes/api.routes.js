@@ -6,7 +6,12 @@ const {
   getUser,
 } = require("../Controller/User.controller");
 const { authenticator } = require("../Middlewares/authenticator");
-const { addPost, deletePost } = require("../Controller/Post.controller");
+const {
+  addPost,
+  deletePost,
+  likePost,
+  unlikePost,
+} = require("../Controller/Post.controller");
 
 const router = express.Router();
 
@@ -27,6 +32,12 @@ router.post("/posts", authenticator, addPost);
 
 // DELETE api/posts/{id}
 router.delete("/posts/:id", authenticator, deletePost);
+
+// POST /api/like/{id}
+router.post("/like/:id", authenticator, likePost);
+
+// POST /api/unlike/{id}
+router.post("/unlike/:id", authenticator, unlikePost);
 
 module.exports = {
   router,
